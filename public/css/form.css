@@ -1,0 +1,19 @@
+.form-group p {
+  font-size: 16px;
+  margin-top: 20px;
+}
+.form-group .btn-submit {
+  background: #55b8b7;
+  color: #fff;
+  margin-right: 20px;
+  float: left;
+  display: inline-block;
+  width: auto;
+  padding: 0 20px;
+  border: none;
+  height: 40px;
+  font-size: 16px;
+}
+.form-group .btn-submit:hover {
+  background-color: #999;
+}
