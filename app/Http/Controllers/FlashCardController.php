@@ -3,7 +3,8 @@
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Request;
+use Illuminate\Support\Facades\Redirect;
 
 class FlashCardController extends Controller {
 
@@ -14,7 +15,9 @@ class FlashCardController extends Controller {
 	 */
 	public function index()
 	{
-		return view('flash_cards.index');
+		$flashCards = \App\FlashCard::getByLanguage(Request::input('lang'));
+		$flashCards = $flashCards->shuffle();
+		return view('flash_cards.index', ['flashCards' => $flashCards]);
 	}
 
 	/**
@@ -24,7 +27,9 @@ class FlashCardController extends Controller {
 	 */
 	public function create()
 	{
-		//
+		$flashCards = \App\FlashCard::getByLanguage(Request::input('lang'));
+		$flashCards = $flashCards->shuffle()->take(10);
+		return view('flash_cards.create', ['flashCards' => $flashCards]);
 	}
 
 	/**
@@ -34,7 +39,13 @@ class FlashCardController extends Controller {
 	 */
 	public function store()
 	{
-		//
+		$flashCard = \App\FlashCard::create([
+			'word'          => Request::input('word'),
+			'pronunciation' => Request::input('pronunciation'),
+			'meaning'       => Request::input('meaning'),
+			'language'      => Request::input('language')
+		]);
+		return Redirect::to(action('FlashCardController@show', $flashCard->id));
 	}
 
 	/**
@@ -45,7 +56,10 @@ class FlashCardController extends Controller {
 	 */
 	public function show($id)
 	{
-		//
+		$flashCard  = \App\FlashCard::find($id);
+		$flashCards = \App\FlashCard::getByLanguage(Request::input('lang'));
+		$flashCards = $flashCards->except($id)->shuffle()->take(10);
+		return view('flash_cards.show', ['flashCard' => $flashCard, 'flashCards' => $flashCards]);
 	}
 
 	/**
